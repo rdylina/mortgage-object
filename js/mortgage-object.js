@@ -25,7 +25,7 @@ class Mortgage {
 
     // Computed Values
     this.loanTotal = this.MIFinanced ? this.loan * (1 + (this.UFMIP / 100)) : this.loan;
-    this.downPayment = this.purchasePrice - this.loan;
+    this.downPayment = (this.purchasePrice - this.loan) / this.purchasePrice;
 
     // Log all the terms set
     console.log("Term: "+ this.term);
@@ -36,9 +36,11 @@ class Mortgage {
 
     // Calculate Payments and setup Amortization Table
     this.calculatePayments();
-     
+   
   } // end constructor
     
+  
+
   calculatePayments(){
     console.log("calculating payments");
     let _tmpBalance = this.loan;
@@ -46,20 +48,16 @@ class Mortgage {
     let _x = Math.pow(1+_monthlyRate,this.term);
     let _payment = (_tmpBalance * _monthlyRate * (_x/(_x-1))).toFixed(2);
     
-    console.log(_monthlyRate);
-    console.log(_x);
-    
-    console.log("Payment should be " + _payment);
-    console.log("First month Interest");
-    
+    // Utility Function to trim down to 2 digits without rounding
+    // TODO replace with Math.Floor solution
     function trimDigits(number){
-    if(number.toString().indexOf('.') > -1){
-      let numberArray = number.toString().split(".");
-      return parseFloat(numberArray[0] + "." + numberArray[1][0] + numberArray[1][1]);
-    } else {
-      return number;
+      if(number.toString().indexOf('.') > -1){
+        let numberArray = number.toString().split(".");
+        return parseFloat(numberArray[0] + "." + numberArray[1][0] + numberArray[1][1]);
+      } else {
+        return number;
+      }
     }
-  }
    
     //Setup first payment
     this.payments[0] = {
@@ -110,8 +108,10 @@ class Mortgage {
           break;
 
         case "VA":
+          // TODO do VA calcs
 
         case "USDA":
+          // TODO do USDA calcs
 
         default:
           this.payments[i].MIPayment = 1;
